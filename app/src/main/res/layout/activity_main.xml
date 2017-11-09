@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.landayan.labexer3.MainActivity">
+
+    <TableLayout
+
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:text="Data:"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="29dp" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_data" />
+
+        <TextView
+            android:id="@+id/tv_filename"
+            android:text="Filename:"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/et_filename"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="SharedPreferences"
+            android:id="@+id/btn_SharedPreferences"
+            android:text="shared preferences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="InternalStorage"
+            android:id="@+id/btn_InternalStorage"
+            android:text="Internal storage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="InternalCache"
+            android:id="@+id/btn_InternalCache"
+            android:text="internal cache"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_data"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:onClick="ExternalCache"
+            android:id="@+id/btn_ExternalCache"
+            android:text="External Cache"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_InternalCache"
+            android:layout_alignRight="@+id/btn_InternalCache"
+            android:layout_alignEnd="@+id/btn_InternalCache" />
+
+        <Button
+            android:onClick="ExternalStorage"
+            android:id="@+id/btn_ExternalStorage"
+            android:text="External Storage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_ExternalCache"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:onClick="ExtPublicStorage"
+            android:id="@+id/btn_ExtPublicStorage"
+            android:text="Ext Public Storage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_ExternalStorage"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:onClick="Next"
+            android:id="@+id/btn_next"
+            android:text="Next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_ExtPublicStorage"
+            android:layout_centerHorizontal="true" />
+
+    </TableLayout>
+</RelativeLayout>
+
