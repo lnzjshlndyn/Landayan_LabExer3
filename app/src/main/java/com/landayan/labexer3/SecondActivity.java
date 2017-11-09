@@ -1,5 +1,6 @@
 package com.landayan.labexer3;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -18,116 +20,110 @@ import java.io.IOException;
 
 public class SecondActivity extends AppCompatActivity {
 
-    TextView tv_display;
-    EditText file;
-    SharedPreferences preferences;
+    EditText tvMessage, filename;
     FileInputStream fis;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        tv_display = (TextView) findViewById(R.id.tv_display);
-        file = (EditText) findViewById(R.id.et_filename);
-        preferences = getSharedPreferences("pref",MODE_WORLD_READABLE);
-    }
-    //getSharedPreferences
-    public void getSharedPreferences(View view) {
-        String filename = preferences.getString(file.getText().toString(), "");
-        tv_display.setText(filename);
-    }
-    //getInternalStorage
-    public void getInternalStorage (View view) {
-        StringBuffer buffer = new StringBuffer();
-        int read = 0;
-        try {
-            fis = openFileInput(file.getText().toString());
-            while ((read = fis.read()) != -1) {
-                buffer.append((char) read);
-            }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        tv_display.setText(buffer.toString());
+        tvMessage = (EditText)findViewById(R.id.et_data);
+        filename = (EditText) findViewById(R.id.et_filename);
+        preferences = getSharedPreferences("pref", Context.MODE_PRIVATE);
     }
-    //getInternalCache
-    public void getInternalCache(View view){
+
+    public void displayPreferences(View view){
+        String message = preferences.getString(filename.getText().toString(), "");
+
+        tvMessage.setText(message);
+        Toast.makeText(this, "Successfully loaded from Shared Preferences!", Toast.LENGTH_LONG).show();
+    }
+
+    public void displayStorage (View view){
         StringBuffer buffer = new StringBuffer();
-        File dir = getCacheDir();
         int read = 0;
-        try {
-            FileInputStream fis = new FileInputStream(new File(getCacheDir(), file.getText().toString()));
+
+        try{
+            fis = openFileInput(filename.getText().toString());
             while((read = fis.read()) != -1){
                 buffer.append((char)read);
             }
+            fis.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        tv_display.setText(buffer.toString());
+        tvMessage.setText(buffer.toString());
+        Toast.makeText(this, "Successfully loaded from Internal Storage!", Toast.LENGTH_LONG).show();
     }
 
-    //getExternalCache
-    public void getExternalCache(View view){
-        StringBuffer buffer = new StringBuffer();
-        File dir = getExternalCacheDir();
-        int read = 0;
-        try {
-            FileInputStream fis = new FileInputStream(new File(getExternalCacheDir(), file.getText().toString()));
-            while((read = fis.read()) != -1){
-                buffer.append((char)read);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        tv_display.setText(buffer.toString());
+    public void loadInternalCache(View view){
+        File folder = getCacheDir();
+        File file = new File(folder, filename.getText().toString());
+
+        readData(file);
+
+        Toast.makeText(this, "Successfully loaded from Internal Cache!", Toast.LENGTH_LONG).show();
+
     }
 
-    //getExternalStorage
-    public void getExternalStorage(View view){
-        StringBuffer buffer = new StringBuffer();
-        File dir = getExternalFilesDir("Temp");
-        int read = 0;
-        try {
-            FileInputStream fis = new FileInputStream(new File(getExternalFilesDir("Temp"), file.getText().toString()));
-            while((read = fis.read()) != -1){
-                buffer.append((char)read);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        tv_display.setText(buffer.toString());
+    public void loadExternalCache(View view){
+        File folder = getExternalCacheDir();
+        File file = new File(folder, filename.getText().toString());
+
+        readData(file);
+
+        Toast.makeText(this, "Successfully loaded from External Cache!", Toast.LENGTH_LONG).show();
     }
 
-    //getExtPublicStorage
-    public void getExtPublicStorage(View view){
-        StringBuffer buffer = new StringBuffer();
-        File dir = getExternalFilesDir("Temp");
-        int read = 0;
-        try {
-            FileInputStream fis = new FileInputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), file.getText().toString()));
-            while((read = fis.read()) != -1){
-                buffer.append((char)read);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        tv_display.setText(buffer.toString());
+    public void loadExternalStorage(View view){
+        File folder = getExternalFilesDir("temp");
+        File file = new File(folder, filename.getText().toString());
+
+        readData(file);
+
+        Toast.makeText(this, "Successfully loaded from External Storage!", Toast.LENGTH_LONG).show();
     }
 
-    public void Back(View view){
+    public void loadExternalPublicStorage(View view){
+        File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(folder, filename.getText().toString());
+
+        readData(file);
+
+        Toast.makeText(this, "Successfully loaded from External Public Storage!", Toast.LENGTH_LONG).show();
+    }
+
+    public void previous(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
+
+    private void readData(File file) {
+        StringBuffer buffer = new StringBuffer();
+        int read = 0;
+
+        try{
+            fis = new FileInputStream(file);
+            while((read = fis.read()) != -1){
+                buffer.append((char)read);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        tvMessage.setText(buffer.toString());
+    }
+
 }
